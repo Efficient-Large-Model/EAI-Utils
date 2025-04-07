@@ -14,6 +14,15 @@ def supports_gpus_per_node():
     return True
 
 
+def get_srun_partition_and_account():
+    account = os.environ.get("EAI_SLURM_ACCOUNT") or os.environ.get("VILA_SLURM_ACCOUNT") or os.environ.get("SANA_SLURM_ACCOUNT")
+    if account is None:
+        raise ValueError("Either EAI_SLURM_ACCOUNT or VILA_SLURM_ACCOUNT or SANA_SLURM_ACCOUNT must be set in environment variables")
+    partition = os.environ.get("EAI_SLURM_PARTITION") or os.environ.get("VILA_SLURM_PARTITION") or os.environ.get("SANA_SLURM_PARTITION")
+    if partition is None:
+        raise ValueError("Either EAI_SLURM_PARTITION or VILA_SLURM_PARTITION or SANA_SLURM_PARTITION must be set in environment variables")
+    return account, partition
+
 def run_inside_slurm_node():
     if os.environ.get("NO_SLURM"):
         print(colored("Env NO_SLURM has been set. Ignore slurm-related args.", "yellow"))
@@ -21,7 +30,7 @@ def run_inside_slurm_node():
     if os.environ.get("SLURM_JOB_ID"):
         print(colored("Running inside slurm node. Ignore slurm-related args.", "yellow"))
         return True
-    if subprocess.run("which srun", shell=True).returncode != 0:
+    if subprocess.run("which srun", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode != 0:
         print(colored("No slurm installed. Ignore slurm-related args.", "yellow"))
         return True
     return False
@@ -75,10 +84,7 @@ def main() -> None:
         args.max_retry = 0
     else:
         # Get SLURM account and partition
-        if "VILA_SLURM_ACCOUNT" not in os.environ or "VILA_SLURM_PARTITION" not in os.environ:
-            raise ValueError("`VILA_SLURM_ACCOUNT` and `VILA_SLURM_PARTITION` must be set in the environment.")
-        account = os.environ["VILA_SLURM_ACCOUNT"]
-        partition = os.environ["VILA_SLURM_PARTITION"]
+        account, partition = get_srun_partition_and_account()
 
         # Compose the SLURM command
         job_name = f"{account}:{args.mode}/{args.job_name}"

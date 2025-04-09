@@ -41,7 +41,7 @@ def main() -> None:
     parser.add_argument("--job-name", "-J", type=str, default="eai-test")
     parser.add_argument("--nodes", "-N", type=int, default=1)
     parser.add_argument("--gpus-per-node", type=int, default=8)
-    parser.add_argument("--mode", "-m", type=str, default="train")
+    parser.add_argument("--mode", "-m", type=str, default="dev")
     parser.add_argument("--time", "-t", type=str, default="4:00:00")
     parser.add_argument("--timedelta", type=int, default=10)
     parser.add_argument("--output-dir", type=str)

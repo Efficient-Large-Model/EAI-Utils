@@ -8,6 +8,10 @@ A toolkit to boost the development of Efficient AI Group.
 pip install eai-tools
 ```
 
+```bash
+pip install git+https://github.com/Efficient-Large-Model/EAI-Utils
+```
+
 ## Features
 
 ### Command Line Tools

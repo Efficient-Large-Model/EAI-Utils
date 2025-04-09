@@ -20,8 +20,8 @@ dependencies = [
 ]
 
 [project.scripts]
-eai.run = "cli.run:main"
-eai.upload = "cli.upload2hf:main"
+eai-run = "cli.run:main"
+eai-upload = "cli.upload2hf:main"
 
 [project.urls]
 "Homepage" = "https://github.com/Efficient-Large-Model/EAI-Utils"
